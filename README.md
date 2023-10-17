@@ -7,4 +7,4 @@
 
 🛣️ [Project Roadmap](https://github.com/users/rameezk/projects/1/views/1?filterQuery=repo%3A%22rameezk%2Finvestec-python%22)
 
-📘 Documentation (coming soon)
+📘 [Documentation](https://investec-python.readthedocs.io/en/latest/)
