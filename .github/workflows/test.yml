@@ -1,0 +1,26 @@
+name: Test
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Setup PDM
+        uses: pdm-project/setup-pdm@v3
+
+      - name: Install dependencies
+        run: pdm install
+
+      - name: Run tests
+        run: pdm run test
