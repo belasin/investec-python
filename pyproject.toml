@@ -5,7 +5,9 @@ description = "A Python wrapper for the Investec Banking API"
 authors = [
     {name = "Rameez Khan", email = "rameezkhan.sa@gmail.com"},
 ]
-dependencies = []
+dependencies = [
+    "requests>=2.31.0",
+]
 requires-python = ">=3.11"
 readme = "README.md"
 license = {text = "MIT"}
@@ -18,8 +20,11 @@ build-backend = "pdm.backend"
 dev = [
     "pytest>=7.4.2",
     "black>=23.9.1",
+    "mypy>=1.6.0",
+    "types-requests>=2.31.0.9",
 ]
 
 [tool.pdm.scripts]
 test = "pytest tests/"
+lint = "mypy src/"
 
