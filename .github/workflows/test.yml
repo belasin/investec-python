@@ -21,3 +21,6 @@ jobs:
 
       - name: Install dependencies
         run: pdm install
+
+      - name: Run tests
+        run: pdm run test
