@@ -1,8 +1,8 @@
-name: Test
+name: Publish
 
 on:
   push:
-    branches-ignore:
+    branches:
       - main
   workflow_dispatch:
 
@@ -26,3 +26,8 @@ jobs:
 
       - name: Run tests
         run: pdm run test
+
+      - name: Publish
+        env:
+          PDM_PUBLISH_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+        run: pdm publish -u __token__
