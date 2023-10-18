@@ -11,10 +11,14 @@ class Investec:
         self,
         use_sandbox: bool = False,
         client_id: str = "",
-        client_secret: str = "",
+        secret: str = "",
+        api_key: str = "",
     ):
         self._api = API(
-            use_sandbox=use_sandbox, client_id=client_id, client_secret=client_secret
+            use_sandbox=use_sandbox,
+            client_id=client_id,
+            secret=secret,
+            api_key=api_key,
         )
         self._setup_api_resources()
 

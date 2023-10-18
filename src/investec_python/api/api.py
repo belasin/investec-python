@@ -14,10 +14,10 @@ class API:
     _api_url: str = "https://openapi.investec.com"
 
     _use_sandbox: bool = False
-    _sandbox_x_api_token: str = "eUF4elFSRlg5N3ZPY3lRQXdsdUVVNkg2ZVB4TUE1ZVk6YVc1MlpYTjBaV010ZW1FdGNHSXRZV05qYjNWdWRITXRjMkZ1WkdKdmVBPT0="
 
     _client_id: str
-    _client_secret: str
+    _secret: str
+    _api_key: str
 
     _token: str
     _token_expires_at: datetime
@@ -26,23 +26,30 @@ class API:
         self,
         use_sandbox: bool,
         client_id: str = "",
-        client_secret: str = "",
+        secret: str = "",
+        api_key: str = "",
     ):
         self._use_sandbox = use_sandbox
         self._client_id = client_id
-        self._client_secret = client_secret
+        self._secret = secret
+        self._api_key = api_key
 
         if use_sandbox:
             self._setup_client_for_sandbox()
 
         if self._client_id == "":
             raise InvestecError(
-                "You did not choose to use the sandbox but did not provide a client_id"
+                "You chose not to use the sandbox, but did not provide a client_id"
             )
 
-        if self._client_secret == "":
+        if self._secret == "":
             raise InvestecError(
-                "You did not choose to use the sandbox but did not provide a client_secret"
+                "You chose not to use the sandbox, but did not provide a secret"
+            )
+
+        if self._api_key == "":
+            raise InvestecError(
+                "You chose not to use the sandbox, but did not provide a api_key"
             )
 
         self._refresh_token()
@@ -50,18 +57,18 @@ class API:
     def _setup_client_for_sandbox(self):
         self._api_url = "https://openapisandbox.investec.com"
         self._client_id = "yAxzQRFX97vOcyQAwluEU6H6ePxMA5eY"
-        self._client_secret = "4dY0PjEYqoBrZ99r"
+        self._secret = "4dY0PjEYqoBrZ99r"
+        self._api_key = "eUF4elFSRlg5N3ZPY3lRQXdsdUVVNkg2ZVB4TUE1ZVk6YVc1MlpYTjBaV010ZW1FdGNHSXRZV05qYjNWdWRITXRjMkZ1WkdKdmVBPT0="
 
     def _refresh_token(self):
         try:
-            headers = {"Content-Type": "application/x-www-form-urlencoded"}
-            if self._use_sandbox:
-                headers["x-api-key"] = self._sandbox_x_api_token
-
             response = requests.post(
                 f"{self._api_url}/identity/v2/oauth2/token",
-                headers=headers,
-                auth=HTTPBasicAuth(self._client_id, self._client_secret),
+                headers={
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "x-api-key": self._api_key,
+                },
+                auth=HTTPBasicAuth(self._client_id, self._secret),
                 data={"grant_type": "client_credentials"},
             )
 
@@ -108,5 +115,5 @@ class API:
             if response.status_code >= 400:
                 raise InvestecError(f"Failed to get resource at {resource_path}")
             return response.json()
-        except RequestException as e:
+        except RequestException:
             raise InvestecError(f"Failed to get resource at {resource_path}")
