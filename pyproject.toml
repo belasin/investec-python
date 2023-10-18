@@ -1,6 +1,6 @@
 [project]
 name = "investec-python"
-version = "0.1.3-alpha"
+version = "0.1.4-alpha"
 description = "A Python wrapper for the Investec Banking API"
 authors = [
     {name = "Rameez Khan", email = "rameezkhan.sa@gmail.com"},
