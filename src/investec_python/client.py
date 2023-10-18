@@ -1,4 +1,4 @@
-from investec_python.api.api import API
+from investec_python.api.api import API, APIMixin
 
 from investec_python.api.v1.accounts import AccountsManager
 
@@ -13,13 +13,16 @@ class Investec:
         client_id: str = "",
         secret: str = "",
         api_key: str = "",
+        debug: bool = False,
     ):
         self._api = API(
             use_sandbox=use_sandbox,
             client_id=client_id,
             secret=secret,
             api_key=api_key,
+            debug=debug,
         )
+        APIMixin.build(self._api)
         self._setup_api_resources()
 
     def _setup_api_resources(self):

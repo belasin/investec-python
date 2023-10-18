@@ -1,5 +1,5 @@
+import json
 from datetime import datetime, timedelta
-
 from typing import Dict
 
 import requests
@@ -22,17 +22,21 @@ class API:
     _token: str
     _token_expires_at: datetime
 
+    _debug: bool = False
+
     def __init__(
         self,
         use_sandbox: bool,
         client_id: str = "",
         secret: str = "",
         api_key: str = "",
+        debug: bool = False,
     ):
         self._use_sandbox = use_sandbox
         self._client_id = client_id
         self._secret = secret
         self._api_key = api_key
+        self._debug = debug
 
         if use_sandbox:
             self._setup_client_for_sandbox()
@@ -111,9 +115,27 @@ class API:
         headers = self._get_headers()
 
         try:
-            response = requests.get(f"{self._api_url}/{resource_path}", headers=headers)
+            full_path = f"{self._api_url}/{resource_path}"
+            if self._debug:
+                print(f"GET {full_path}")
+            response = requests.get(full_path, headers=headers)
+            if self._debug:
+                print(f"STATUS {response.status_code}")
+                print(f"RESPONSE {json.dumps(response.json(), indent=2)}")
             if response.status_code >= 400:
                 raise InvestecError(f"Failed to get resource at {resource_path}")
             return response.json()
         except RequestException:
             raise InvestecError(f"Failed to get resource at {resource_path}")
+
+
+class APIMixin:
+    _api: API
+
+    @classmethod
+    def build(cls, api: API):
+        cls._api = api
+
+    @property
+    def api(self) -> API:
+        return self._api
