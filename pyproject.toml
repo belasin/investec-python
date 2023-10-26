@@ -28,6 +28,7 @@ dev = [
 [tool.pdm.scripts]
 test = "pytest tests/"
 lint = "mypy src/"
+bump-version = "bump-my-version bump"
 
 [tool.bumpversion]
 current_version = "0.1.4"
