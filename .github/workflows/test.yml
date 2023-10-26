@@ -4,6 +4,8 @@ on:
   push:
     branches-ignore:
       - main
+  schedule:
+    - cron: '0 3 * * 1' # every Monday at 03:00
   workflow_dispatch:
 
 jobs:
