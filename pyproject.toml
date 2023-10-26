@@ -1,6 +1,6 @@
 [project]
 name = "investec-python"
-version = "0.1.4"
+version = "1.0.0"
 description = "A Python wrapper for the Investec Banking API"
 authors = [
     {name = "Rameez Khan", email = "rameezkhan.sa@gmail.com"},
@@ -31,7 +31,7 @@ lint = "mypy src/"
 bump-version = "bump-my-version bump"
 
 [tool.bumpversion]
-current_version = "0.1.4"
+current_version = "1.0.0"
 commit = true
 tag = true
 
