@@ -1,6 +1,6 @@
 [project]
 name = "investec-python"
-version = "0.1.4-alpha"
+version = "0.1.4"
 description = "A Python wrapper for the Investec Banking API"
 authors = [
     {name = "Rameez Khan", email = "rameezkhan.sa@gmail.com"},
@@ -29,3 +29,10 @@ dev = [
 test = "pytest tests/"
 lint = "mypy src/"
 
+[tool.bumpversion]
+current_version = "0.1.4"
+commit = true
+tag = true
+
+[[tool.bumpversion.files]]
+filename = "pyproject.toml"
