@@ -23,8 +23,8 @@ jobs:
       - name: Setup PDM
         uses: pdm-project/setup-pdm@v3
 
-      - name: Install dependencies
-        run: pdm install
+      - name: Install dependencies (including dev)
+        run: pdm sync --dev
 
       - name: Lint
         run: pdm run lint
