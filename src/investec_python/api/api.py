@@ -1,5 +1,5 @@
 import json
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Dict, Optional
 
 import requests
@@ -10,7 +10,6 @@ from investec_python.exception import InvestecError, InvestecAuthenticationError
 
 
 class API:
-
     _api_url: str = "https://openapi.investec.com"
 
     _use_sandbox: bool = False
@@ -87,7 +86,7 @@ class API:
                 raise InvestecAuthenticationError("Failed to authenticate")
 
             self._token = response_data["access_token"]
-            self._token_expires_at = datetime.utcnow() + timedelta(
+            self._token_expires_at = datetime.now(timezone.utc) + timedelta(
                 seconds=response_data["expires_in"]
             )
 
@@ -95,7 +94,7 @@ class API:
             raise InvestecAuthenticationError("Failed to authenticate")
 
     def _is_token_valid(self):
-        return self._token is not None and self._token_expires_at > datetime.utcnow()
+        return self._token is not None and self._token_expires_at > datetime.now(timezone.utc)
 
     def _get_token(self) -> str:
         if not self._is_token_valid():
