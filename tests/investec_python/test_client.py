@@ -44,3 +44,8 @@ class TestInvestec:
         assert len(transactions) > 0
         for transaction in transactions:
             assert transaction.transaction_type == "CardPurchases"
+
+    def test_pending_transactions(self, investec_client):
+        account = investec_client.accounts.list()[0]
+        transactions = account.pending_transactions()
+        assert len(transactions) > 0
