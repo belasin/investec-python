@@ -1,5 +1,5 @@
-from datetime import date
-from typing import List
+from datetime import date, datetime
+from typing import List, Optional, Union
 
 from pydantic import BaseModel, Field
 
@@ -26,6 +26,13 @@ class Transaction(BaseModel):
     running_balance: float = Field(alias="runningBalance")
 
 
+def _to_api_date(d: Union[date, datetime, str]) -> str:
+    """Normalise to 'YYYY-MM-DD' for the API."""
+    if isinstance(d, datetime):
+        d = d.date()
+    return d if isinstance(d, str) else d.isoformat()
+
+
 class Account(APIMixin, BaseModel):
     account_id: str = Field(alias="accountId")
 
@@ -34,14 +41,25 @@ class Account(APIMixin, BaseModel):
         balance = response["data"]
         return Balance(**balance)
 
-    def transactions(self) -> List[Transaction]:
-        response = self.api.get(f"za/pb/v1/accounts/{self.account_id}/transactions")
+    def transactions(
+        self,
+        from_date: Optional[Union[date, datetime, str]] = None,
+        to_date: Optional[Union[date, datetime, str]] = None,
+        transaction_type: Optional[str] = None,
+    ) -> List[Transaction]:
+        params = {}
+        if from_date:
+            params["fromDate"] = _to_api_date(from_date)
+        if to_date:
+            params["toDate"] = _to_api_date(to_date)
+        if transaction_type:
+            params["transactionType"] = transaction_type
+        response = self.api.get(f"za/pb/v1/accounts/{self.account_id}/transactions", params=params)
         transactions = response["data"]["transactions"]
         return [Transaction(**transaction) for transaction in transactions]
 
 
 class AccountsManager:
-
     _api: API
 
     def __init__(self, api: API):
