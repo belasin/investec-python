@@ -1,6 +1,6 @@
 import json
-from datetime import datetime, timedelta
-from typing import Dict
+from datetime import datetime, timedelta, timezone
+from typing import Dict, Optional
 
 import requests
 from requests import RequestException
@@ -10,7 +10,6 @@ from investec_python.exception import InvestecError, InvestecAuthenticationError
 
 
 class API:
-
     _api_url: str = "https://openapi.investec.com"
 
     _use_sandbox: bool = False
@@ -87,7 +86,7 @@ class API:
                 raise InvestecAuthenticationError("Failed to authenticate")
 
             self._token = response_data["access_token"]
-            self._token_expires_at = datetime.utcnow() + timedelta(
+            self._token_expires_at = datetime.now(timezone.utc) + timedelta(
                 seconds=response_data["expires_in"]
             )
 
@@ -95,7 +94,7 @@ class API:
             raise InvestecAuthenticationError("Failed to authenticate")
 
     def _is_token_valid(self):
-        return self._token is not None and self._token_expires_at > datetime.utcnow()
+        return self._token is not None and self._token_expires_at > datetime.now(timezone.utc)
 
     def _get_token(self) -> str:
         if not self._is_token_valid():
@@ -111,14 +110,16 @@ class API:
     def api_url(self) -> str:
         return self._api_url
 
-    def get(self, resource_path: str) -> Dict:
+    def get(self, resource_path: str, params: Optional[dict] = None) -> Dict:
         headers = self._get_headers()
 
         try:
             full_path = f"{self._api_url}/{resource_path}"
             if self._debug:
                 print(f"GET {full_path}")
-            response = requests.get(full_path, headers=headers)
+            if not params:
+                params = {}
+            response = requests.get(full_path, headers=headers, params=params)
             if self._debug:
                 print(f"STATUS {response.status_code}")
                 print(f"RESPONSE {json.dumps(response.json(), indent=2)}")
