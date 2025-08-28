@@ -3,7 +3,7 @@ name = "investec-python"
 version = "1.0.1"
 description = "A Python wrapper for the Investec Banking API"
 authors = [
-    {name = "Rameez Khan", email = "rameezkhan.sa@gmail.com"},
+    {name = "Rameez Khan", email = "rameez@rameezkhan.dev"},
 ]
 dependencies = [
     "requests>=2.31.0",
@@ -17,14 +17,6 @@ license = {text = "MIT"}
 requires = ["pdm-backend"]
 build-backend = "pdm.backend"
 
-[tool.pdm.dev-dependencies]
-dev = [
-    "pytest>=7.4.2",
-    "black>=23.9.1",
-    "mypy>=1.6.0",
-    "types-requests>=2.31.0.9",
-]
-
 [tool.pdm.scripts]
 test = "pytest tests/"
 lint = "mypy src/"
@@ -37,3 +29,12 @@ tag = true
 
 [[tool.bumpversion.files]]
 filename = "pyproject.toml"
+
+[dependency-groups]
+dev = [
+    "pytest>=7.4.2",
+    "black>=23.9.1",
+    "mypy>=1.6.0",
+    "types-requests>=2.31.0.9",
+    "bump-my-version>=1.2.1",
+]
